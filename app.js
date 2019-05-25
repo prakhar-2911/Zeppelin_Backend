@@ -6,6 +6,7 @@ const MONGODB_URI = 'mongodb+srv://prakhar_sharma:PSnaeT3iHcHvT1PX@cluster0-db0a
 
 
 const countryRoutes = require('./Routes/countries');
+const authRoutes = require('./Routes/auth');
 
 const app = express();
 
@@ -19,11 +20,12 @@ app.use((req, res, next) => {
 });
 
 
+app.use('/auth', authRoutes);
+
 app.use('/countries', countryRoutes);
 
 
 app.use((error, req, res, next) => {
-    console.log(error);
         const status = error.statusCode || 500;
         const message = error.message; 
         res.status(status).json({

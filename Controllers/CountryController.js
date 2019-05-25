@@ -4,8 +4,7 @@ const Country = require('../Models/Country');
 exports.getCountries = (req, res, next) => {
     Country.find().then(countries => {
        res.status(200).json({
-        countries: ['hey', 'there'],  
-        userType: 'admin' 
+        countries: countries,
        });     
     })
     .catch(err => {
@@ -18,6 +17,11 @@ exports.getCountries = (req, res, next) => {
 
 
 exports.postCountry = (req, res, next) => {
+    if(req.userRole.toString() !== 'admin'){
+        const error = new Error('Not Authorized');
+        error.statusCode = 403;
+        throw error;
+    }
     const countryName = req.body.countryName;
 
     const country = new Country({
@@ -39,6 +43,12 @@ exports.postCountry = (req, res, next) => {
 };
 
 exports.deleteCountry = (req, res, next) => {
+    if(req.userRole.toString() !== 'admin'){
+        const error = new Error('Not Authorized');
+        error.statusCode = 403;
+        throw error;
+    }
+    
     const countryId = req.body.countryId;    
     
        Country.deleteOne({_id: countryId})
@@ -56,7 +66,13 @@ exports.deleteCountry = (req, res, next) => {
     };
        
         
-      exports.editCountry = (req, res, next) => {
+    exports.editCountry = (req, res, next) => {
+        if(req.userRole.toString() !== 'admin'){
+            const error = new Error('Not Authorized');
+            error.statusCode = 403;
+            throw error;
+        }
+        
         const countryId = req.body.countryId;    
         const updatedTitle = req.body.countryName;
         
